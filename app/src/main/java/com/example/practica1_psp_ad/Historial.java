@@ -5,14 +5,21 @@ import android.util.Log;
 
 import com.example.practica1_psp_ad.MainActivity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Historial{
 
     public static final String TAG = MainActivity.class.getName() + "xyzyx";
 
-    private String nombre;
-    private int year, mes, dia, hora, minutos, segundos, numero;
+    private String nombre, numero;
+    private Date fecha;
+    private int year, mes, dia, hora, minutos, segundos;
 
     @Override
     public String toString() {
@@ -28,6 +35,14 @@ public class Historial{
                 '}';
     }
 
+    /*private String csvFromDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy; MM; dd; HH; mm; ss;");
+        //format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return format.format(calendar.getTime());
+    }*/
+
     public String toCsvFilesDir() {
         return year + "; " + mes + "; " + dia + "; " + hora + "; " + minutos + "; " + segundos + "; " + numero + "; " + nombre;
     }
@@ -36,11 +51,36 @@ public class Historial{
         return nombre + "; " + year + "; " + mes + "; " + dia + "; " + hora + "; " + minutos + "; " + segundos + "; " + numero;
     }
 
-    public Historial() {
-        this(null, 0, 0, 0, 0, 0, 0, 0);
+    public static Historial fromCsvFormatOne(String csv) {
+        return null;
     }
 
-    public Historial(String nombre, int year, int mes, int dia, int hora, int minutos, int segundos, int numero) {
+    public static Historial fromCsvFormatTwo(String csv) {
+        Historial historial = null;
+        String[] partes = csv.split(";");
+        if(partes.length == 8) {
+            String name = partes[0].trim();
+            String phone = partes[7].trim();
+            String stringDate = partes[1].trim() + "-" + partes[2].trim() +
+                    "-" + partes[3].trim() + " " + partes[4].trim() + ":" +
+                    partes[5].trim() + ":" + partes[6].trim();
+            Date date = null;
+            try {
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                date = format.parse(stringDate);
+            } catch (ParseException e) {
+
+            }
+            //historial = new Historial(name, phone, date);
+        }
+        return historial;
+    }
+
+    public Historial() {
+        this(null, 0, 0, 0, 0, 0, 0, null);
+    }
+
+    public Historial(String nombre, int year, int mes, int dia, int hora, int minutos, int segundos, String numero) {
         this.nombre = nombre;
         this.year = year;
         this.mes = mes;
@@ -107,11 +147,11 @@ public class Historial{
         this.segundos = segundos;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

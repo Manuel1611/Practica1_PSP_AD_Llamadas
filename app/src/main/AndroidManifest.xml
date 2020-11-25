@@ -14,19 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica1_PSP_AD" >
 
-        <!--
-         En esta activity de ajustes he declarado que la padre es la MainActivity para que
-         cuando estemos en esta pantalla nos aparezca un botón en la parte superior para volver
-         a la actividad principal
-        -->
-
-        <activity
-            android:name=".ActivityAjustes"
-            android:parentActivityName=".MainActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
-        </activity>
+        <activity android:name=".ActivityAjustes" />
         <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

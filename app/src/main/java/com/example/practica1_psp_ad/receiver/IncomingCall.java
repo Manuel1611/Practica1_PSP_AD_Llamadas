@@ -7,8 +7,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.example.practica1_psp_ad.MainActivity;
-
 import static com.example.practica1_psp_ad.MainActivity.TAG;
 
 public class IncomingCall extends BroadcastReceiver {
@@ -29,5 +27,4 @@ public class IncomingCall extends BroadcastReceiver {
         },PhoneStateListener.LISTEN_CALL_STATE);
 
     }
-
 }

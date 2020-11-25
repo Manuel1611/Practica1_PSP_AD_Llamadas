@@ -4,10 +4,10 @@
     <string name="btAjustes">Ajustes</string>
     <string name="tvAjustes">AJUSTES</string>
     <string name="btSwitch">Listado a mostrar</string>
-    <string name="tvCualMostrar">Se mostrará el listado de la memoria externa</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
     <string name="sync_header">AJUSTES</string>
 
     <string name="sync_title">Listado a mostrar</string>
+    <string name="btGuardarAjustes">Guardar</string>
 </resources>

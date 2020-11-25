@@ -11,12 +11,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.practica1_psp_ad.receiver.IncomingCall;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getName() + "xyzyx";
     TextView tvList;
 
+    boolean queListadoMostrar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+        Intent intent = getIntent();
+        queListadoMostrar = intent.getBooleanExtra(ActivityAjustes.ESTADOSW, false);
 
         tvList = findViewById(R.id.tvList);
 
@@ -71,44 +73,77 @@ public class MainActivity extends AppCompatActivity {
 
             if((permReadPhone == PackageManager.PERMISSION_GRANTED) && (permReadCall == PackageManager.PERMISSION_GRANTED) && (permReadContacts == PackageManager.PERMISSION_GRANTED)) {
                 seguir();
+
             }else if(permReadPhone == PackageManager.PERMISSION_GRANTED) {
+
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_CALL_LOG);
+
                 } else {
+
                     requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, REQUEST_CODE);
+
                 }
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_CONTACTS);
+
                 } else {
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE);
                 }
             }else if(permReadCall == PackageManager.PERMISSION_GRANTED) {
+
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_PHONE_STATE);
+
                 } else {
+
                     requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_CODE);
+
                 }
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_CONTACTS);
+
                 } else {
+
                     requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE);
+
                 }
             }else if(permReadContacts == PackageManager.PERMISSION_GRANTED) {
+
                 if((shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) && (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG))) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG);
+
                 }else {
+
                     requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG}, REQUEST_CODE);
+
                 }
             }else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE) && shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG) && shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE) && shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG)
+                        && shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS);
+
                 }else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_PHONE_STATE)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_PHONE_STATE);
+
                 }else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALL_LOG)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_CALL_LOG);
+
                 }else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+
                     explainPermission(REQUEST_CODE, Manifest.permission.READ_CONTACTS);
+
                 }else {
+
                     requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.READ_CALL_LOG, Manifest.permission.READ_CONTACTS}, REQUEST_CODE);
                 }
             }
@@ -118,11 +153,12 @@ public class MainActivity extends AppCompatActivity {
     private void explainPermission(int code, String... permissions) {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Nº de permisos requeridos: " + permissions.length);
+        builder.setTitle("Se necesitan " + permissions.length + " permisos:");
         String suma = "";
         for(String permission : permissions) {
             suma += permission + ", ";
         }
+
         builder.setMessage("Esta aplicación requiere de los permisos:\n\n" + suma + "\n\nPor favor, acéptalos todos para continuar.");
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @SuppressLint("NewApi")
@@ -131,20 +167,23 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissions(permissions, code);
             }
         });
+
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
 
     private void seguir() {
 
-        Historial historial = new Historial("prueba", 0, 0, 0, 0, 0, 0, 123456789);
+        Historial historial = new Historial("Manu", 2020, 11, 16, 17, 35, 55, "123456789");
 
         if (saveFilesDir(historial, this)) {
-            readFile(false, this);
+            readFile(queListadoMostrar, this);
         }
+
         if (saveExternalFilesDir(historial, this)) {
-            readFile(false, this);
+            readFile(queListadoMostrar, this);
         }
+
     }
 
     public boolean saveFilesDir(Historial historial, Context c) {
@@ -177,20 +216,20 @@ public class MainActivity extends AppCompatActivity {
         return result;
     }
 
-    public ArrayList<String> readFile(boolean cualElegir, Context c) {
+    public ArrayList<String> readFile(boolean cualMostrar, Context c) {
         ArrayList<String> lista = new ArrayList();
         File f;
         String linea;
 
         try {
-            if (cualElegir) {
+            if (cualMostrar) {
                 f = new File(c.getExternalFilesDir(null), "llamadas.csv");
             } else {
                 f = new File(c.getFilesDir(), "historial.csv");
             }
 
             BufferedReader br = new BufferedReader(new FileReader(f));
-            if (cualElegir) {
+            if (cualMostrar) {
                 lista.add("LLAMADAS.CSV\n");
             } else {
                 lista.add("HISTORIAL.CSV\n");
@@ -202,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 sb.append('\n');
                 sb.append('\n');
             }
+
             tvList.setText(sb);
             br.close();
 
