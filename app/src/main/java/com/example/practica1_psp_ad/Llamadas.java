@@ -1,29 +1,21 @@
 package com.example.practica1_psp_ad;
 
-import android.annotation.SuppressLint;
-import android.util.Log;
-
-import com.example.practica1_psp_ad.MainActivity;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Objects;
 
-public class Historial{
+public class Llamadas {
 
     public static final String TAG = MainActivity.class.getName() + "xyzyx";
 
     private String nombre, numero;
-    private Date fecha;
     private int year, mes, dia, hora, minutos, segundos;
 
     @Override
     public String toString() {
-        return "Historial{" +
+        return "Llamadas{" +
                 "nombre='" + nombre + '\'' +
                 ", year=" + year +
                 ", mes=" + mes +
@@ -35,14 +27,6 @@ public class Historial{
                 '}';
     }
 
-    /*private String csvFromDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy; MM; dd; HH; mm; ss;");
-        //format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
-        return format.format(calendar.getTime());
-    }*/
-
     public String toCsvFilesDir() {
         return year + "; " + mes + "; " + dia + "; " + hora + "; " + minutos + "; " + segundos + "; " + numero + "; " + nombre;
     }
@@ -51,12 +35,12 @@ public class Historial{
         return nombre + "; " + year + "; " + mes + "; " + dia + "; " + hora + "; " + minutos + "; " + segundos + "; " + numero;
     }
 
-    public static Historial fromCsvFormatOne(String csv) {
+    public static Llamadas fromCsvFormatOne(String csv) {
         return null;
     }
 
-    public static Historial fromCsvFormatTwo(String csv) {
-        Historial historial = null;
+    public static Llamadas fromCsvFormatTwo(String csv) {
+        Llamadas llamadas = null;
         String[] partes = csv.split(";");
         if(partes.length == 8) {
             String name = partes[0].trim();
@@ -73,14 +57,14 @@ public class Historial{
             }
             //historial = new Historial(name, phone, date);
         }
-        return historial;
+        return llamadas;
     }
 
-    public Historial() {
+    public Llamadas() {
         this(null, 0, 0, 0, 0, 0, 0, null);
     }
 
-    public Historial(String nombre, int year, int mes, int dia, int hora, int minutos, int segundos, String numero) {
+    public Llamadas(String nombre, int year, int mes, int dia, int hora, int minutos, int segundos, String numero) {
         this.nombre = nombre;
         this.year = year;
         this.mes = mes;
@@ -159,15 +143,15 @@ public class Historial{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Historial historial = (Historial) o;
-        return year == historial.year &&
-                mes == historial.mes &&
-                dia == historial.dia &&
-                hora == historial.hora &&
-                minutos == historial.minutos &&
-                segundos == historial.segundos &&
-                numero == historial.numero &&
-                Objects.equals(nombre, historial.nombre);
+        Llamadas llamadas = (Llamadas) o;
+        return year == llamadas.year &&
+                mes == llamadas.mes &&
+                dia == llamadas.dia &&
+                hora == llamadas.hora &&
+                minutos == llamadas.minutos &&
+                segundos == llamadas.segundos &&
+                numero == llamadas.numero &&
+                Objects.equals(nombre, llamadas.nombre);
     }
 
     @Override

@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1;
     public static final String TAG = MainActivity.class.getName() + "xyzyx";
     TextView tvList;
-
     boolean queListadoMostrar;
 
     @Override
@@ -174,46 +173,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void seguir() {
 
-        Historial historial = new Historial("Manu", 2020, 11, 16, 17, 35, 55, "123456789");
+        readFile(queListadoMostrar, this);
 
-        if (saveFilesDir(historial, this)) {
-            readFile(queListadoMostrar, this);
-        }
-
-        if (saveExternalFilesDir(historial, this)) {
-            readFile(queListadoMostrar, this);
-        }
-
-    }
-
-    public boolean saveFilesDir(Historial historial, Context c) {
-        boolean result = true;
-        File f = new File(c.getFilesDir(), "historial.csv");
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(f, true);
-            fw.write(historial.toCsvFilesDir() + "\n");
-            fw.flush();
-            fw.close();
-        } catch (IOException e) {
-            result = false;
-        }
-        return result;
-    }
-
-    public boolean saveExternalFilesDir(Historial historial, Context c) {
-        boolean result = true;
-        File f = new File(c.getExternalFilesDir(null), "llamadas.csv");
-        FileWriter fw = null;
-        try {
-            fw = new FileWriter(f, true);
-            fw.write(historial.toCsvExternalFilesDir() + "\n");
-            fw.flush();
-            fw.close();
-        } catch (IOException e) {
-            result = false;
-        }
-        return result;
     }
 
     public ArrayList<String> readFile(boolean cualMostrar, Context c) {
