@@ -14,12 +14,18 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.practica1_psp_ad.Comparar;
 import com.example.practica1_psp_ad.Llamadas;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import static com.example.practica1_psp_ad.MainActivity.TAG;
 
@@ -110,6 +116,23 @@ public class IncomingCall extends BroadcastReceiver {
 
     }
 
+    private List<Llamadas> getLlamadas() {
+        List<Llamadas> listaDeLlamadas = new ArrayList<>();
+        listaDeLlamadas.clear();
+        File f = new File(c.getExternalFilesDir(null), "llamadas.csv");
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                listaDeLlamadas.add( Llamadas.fromCsvString(linea, "; "));
+            }
+            br.close();
+        }catch (IOException e){
+
+        }
+        return listaDeLlamadas;
+    }
+
     public boolean saveFilesDir(Llamadas llamadas, Context c) {
         boolean result = true;
         File f = new File(c.getFilesDir(), "historial.csv");
@@ -126,12 +149,19 @@ public class IncomingCall extends BroadcastReceiver {
     }
 
     public boolean saveExternalFilesDir(Llamadas llamadas, Context c) {
+        List<Llamadas> llamad = getLlamadas();
+        llamad.add(llamadas);
+        Collections.sort(llamad);
         boolean result = true;
         File f = new File(c.getExternalFilesDir(null), "llamadas.csv");
         FileWriter fw = null;
         try {
-            fw = new FileWriter(f, true);
-            fw.write(llamadas.toCsvExternalFilesDir() + "\n");
+            fw = new FileWriter(f);
+
+            for(Llamadas llam: llamad) {
+                fw.write(llam.toCsvExternalFilesDir() + "\n");
+            }
+
             fw.flush();
             fw.close();
         } catch (IOException e) {

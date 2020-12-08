@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
-public class Llamadas {
+public class Llamadas implements Comparable<Llamadas> {
 
     public static final String TAG = MainActivity.class.getName() + "xyzyx";
 
@@ -35,29 +35,20 @@ public class Llamadas {
         return nombre + "; " + year + "; " + mes + "; " + dia + "; " + hora + "; " + minutos + "; " + segundos + "; " + numero;
     }
 
-    public static Llamadas fromCsvFormatOne(String csv) {
-        return null;
-    }
+    public static Llamadas fromCsvString(String linea, String separator){
 
-    public static Llamadas fromCsvFormatTwo(String csv) {
-        Llamadas llamadas = null;
-        String[] partes = csv.split(";");
-        if(partes.length == 8) {
-            String name = partes[0].trim();
-            String phone = partes[7].trim();
-            String stringDate = partes[1].trim() + "-" + partes[2].trim() +
-                    "-" + partes[3].trim() + " " + partes[4].trim() + ":" +
-                    partes[5].trim() + ":" + partes[6].trim();
-            Date date = null;
-            try {
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                date = format.parse(stringDate);
-            } catch (ParseException e) {
+        String [] trozos = linea.split(separator);
 
-            }
-            //historial = new Historial(name, phone, date);
+        Llamadas llamada = null;
+        if(trozos.length == 8) {
+
+            llamada = new Llamadas(trozos[0].trim(), Integer.parseInt(trozos[1].trim()) ,Integer.parseInt(trozos[2].trim()),
+                    Integer.parseInt(trozos[3].trim()), Integer.parseInt(trozos[4].trim()), Integer.parseInt(trozos[5].trim()), Integer.parseInt(trozos[6].trim()), trozos[7].trim());
+
         }
-        return llamadas;
+
+        return llamada;
+
     }
 
     public Llamadas() {
@@ -159,4 +150,19 @@ public class Llamadas {
         return Objects.hash(nombre, year, mes, dia, hora, minutos, segundos, numero);
     }
 
+    @Override
+    public int compareTo(Llamadas llamadas) {
+
+        int sort = this.nombre.compareTo(llamadas.getNombre());
+        if(sort == 0){
+            sort = this.dia - llamadas.getDia();
+            if (sort == 0) {
+                sort = this.mes - llamadas.getMes();
+                if(sort == 0) {
+                    sort = this.year - llamadas.getYear();
+                }
+            }
+        }
+        return sort;
+    }
 }
